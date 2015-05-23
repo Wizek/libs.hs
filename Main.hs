@@ -3,47 +3,18 @@
 import Data.List
 
 class PType r where
-  asd :: [String] -> r
+  p' :: [String] -> r
 
 instance (a ~ ()) => PType (IO a) where
-  asd a = putStrLn (reverse $ concatList a)
+  p' strings = putStrLn (reverse $ concatList strings)
+    where concatList = intercalate " "
 
--- instance (PType r) => PType (Int -> r) where
 instance (Show a, PType r) => PType (a -> r) where
-  asd a = \x -> asd $ (show x : a)
+  p' strings = \x -> p' $ (show x : strings)
 
 p :: (Show a, PType r) => a -> r
-p = asd []
+p = p' []
 
--- p x = print x
 main = do
   p "a"
   p "a" 1
-  -- asd 1
-
-  -- asd [] "vv" "sdd" "asdsa"
-  -- p 1 2
-
-concatList = intercalate " "
-
-
--- class TType a where
---   value :: a
-
--- instance (a ~ ()) => TType (IO a) where
---   value = putStrLn "IO"
-
--- instance TType Int where
---   value = 33
-
--- instance TType Char where
---   value = 'a'
-
--- -- t = value
-
--- main = do
---   putStrLn (value : "a")
---   (value :: IO ())
---   -- (t :: IO ())
-
-
